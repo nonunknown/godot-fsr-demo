@@ -1,0 +1,211 @@
+[gd_scene load_steps=11 format=3 uid="uid://deysidmmr1vsk"]
+
+[ext_resource type="Script" path="res://scripts/FSR.gd" id="1_0jkuk"]
+[ext_resource type="PackedScene" uid="uid://bx4qiopcu1plh" path="res://objects/obj_car.res" id="1_vr22r"]
+[ext_resource type="PackedScene" uid="uid://c47b2kg5e5qjx" path="res://objects/obj_street.res" id="2_qvoqu"]
+[ext_resource type="Texture2D" uid="uid://thv722r1vn7j" path="res://Sky.hdr" id="3_a5wxq"]
+[ext_resource type="Script" path="res://scripts/Options.gd" id="5_272a1"]
+
+[sub_resource type="GDScript" id="GDScript_al6iy"]
+script/source = "extends Position3D
+
+
+func _physics_process(delta: float) -> void:
+	rotate_y(delta * 0.5)
+"
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_08vmc"]
+panorama = ExtResource( "3_a5wxq" )
+
+[sub_resource type="Sky" id="Sky_ugag1"]
+sky_material = SubResource( "PanoramaSkyMaterial_08vmc" )
+
+[sub_resource type="Environment" id="Environment_fmhgi"]
+background_mode = 2
+sky = SubResource( "Sky_ugag1" )
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_mode = 3
+ss_reflections_enabled = true
+ssao_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = true
+sdfgi_bounce_feedback = 0.11
+volumetric_fog_density = 0.0203
+adjustment_enabled = true
+adjustment_brightness = 1.17
+adjustment_contrast = 1.12
+adjustment_saturation = 1.42
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hnnob"]
+bg_color = Color(0, 0, 0, 0.54902)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource( "1_0jkuk" )
+
+[node name="Car" parent="." groups=["CAR"] instance=ExtResource( "1_vr22r" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3637, 0.707598, 10.8301)
+
+[node name="Street" parent="." instance=ExtResource( "2_qvoqu" )]
+
+[node name="CamCenter" type="Position3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3414, 0, 10.6266)
+script = SubResource( "GDScript_al6iy" )
+
+[node name="Camera3D" type="Camera3D" parent="CamCenter"]
+transform = Transform3D(1, 0, 0, 0, 0.918122, 0.396299, 0, -0.396299, 0.918122, 0, 2.47469, 5.52999)
+fov = 57.7
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( "Environment_fmhgi" )
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.826589, 0.342615, -0.446504, 0, 0.793353, 0.608762, 0.562806, -0.503196, 0.655777, -25.6881, 53.4338, 68.438)
+shadow_enabled = true
+
+[node name="SpawnPos" type="Position3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.4004, 3.92395, 11.0017)
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( "5_272a1" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="Control"]
+anchor_bottom = 1.0
+offset_right = 232.0
+theme_override_styles/panel = SubResource( "StyleBoxFlat_hnnob" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 12.0
+offset_right = -9.0
+offset_bottom = -12.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer"]
+offset_right = 214.0
+offset_bottom = 26.0
+
+[node name="Label" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer"]
+offset_right = 71.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 16
+text = "FSR Scale"
+
+[node name="lb_scale" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer"]
+offset_left = 75.0
+offset_right = 214.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "#"
+align = 2
+
+[node name="hs_scale" type="HSlider" parent="Control/Panel/VBoxContainer"]
+offset_top = 30.0
+offset_right = 214.0
+offset_bottom = 46.0
+size_flags_horizontal = 3
+min_value = 0.25
+max_value = 1.0
+step = 0.001
+value = 1.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/Panel/VBoxContainer"]
+offset_top = 50.0
+offset_right = 214.0
+offset_bottom = 76.0
+
+[node name="Label" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer2"]
+offset_right = 112.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 16
+text = "FSR Sharpness"
+
+[node name="lb_sharp" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer2"]
+offset_left = 116.0
+offset_right = 214.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "#"
+align = 2
+
+[node name="hs_sharpness" type="HSlider" parent="Control/Panel/VBoxContainer"]
+offset_top = 80.0
+offset_right = 214.0
+offset_bottom = 96.0
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.001
+value = 0.2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/Panel/VBoxContainer"]
+offset_top = 100.0
+offset_right = 214.0
+offset_bottom = 126.0
+
+[node name="Label" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer3"]
+offset_right = 131.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 16
+text = "FSR Mipmap Bias"
+
+[node name="lb_bias" type="Label" parent="Control/Panel/VBoxContainer/HBoxContainer3"]
+offset_left = 135.0
+offset_right = 214.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "#"
+align = 2
+
+[node name="hs_bias" type="HSlider" parent="Control/Panel/VBoxContainer"]
+offset_top = 130.0
+offset_right = 214.0
+offset_bottom = 146.0
+size_flags_horizontal = 3
+min_value = -2.0
+max_value = 2.0
+step = 0.001
+
+[node name="cb_sdf" type="CheckButton" parent="Control/Panel/VBoxContainer"]
+offset_top = 150.0
+offset_right = 214.0
+offset_bottom = 190.0
+text = "Use SDFGI"
+
+[node name="debug" type="Label" parent="Control/Panel/VBoxContainer"]
+offset_top = 194.0
+offset_right = 214.0
+offset_bottom = 217.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+autowrap_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+text = "Press ENTER to spawn a car / Press ESC to despawn"
+align = 2
+
+[connection signal="value_changed" from="Control/Panel/VBoxContainer/hs_scale" to="Control" method="_on_hs_scale_value_changed"]
+[connection signal="value_changed" from="Control/Panel/VBoxContainer/hs_sharpness" to="Control" method="_on_hs_sharpness_value_changed"]
+[connection signal="value_changed" from="Control/Panel/VBoxContainer/hs_bias" to="Control" method="_on_hs_bias_value_changed"]
+[connection signal="toggled" from="Control/Panel/VBoxContainer/cb_sdf" to="Control" method="_on_cb_sdf_toggled"]
