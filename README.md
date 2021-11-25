@@ -24,6 +24,4 @@ https://ifiregames.itch.io/stern-flowers-chibifire-com-godot-engine
 
 ## Video
 
-
-here
-
+https://www.youtube.com/watch?v=bv0uOfCDFm0
